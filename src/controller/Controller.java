@@ -9,6 +9,8 @@ import view.MVCView;
 
 public class Controller {
 
+	public final static int maximoDeDatos = 20;
+	
 	/* Instancia del Modelo*/
 	private MVCModelo modelo;
 

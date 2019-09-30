@@ -36,6 +36,7 @@ public class TestNode
 		assertEquals("Hola", node.darDato());
 		assertEquals(null, node.darSiguente());
 	}
+	
 	@Test
 	public void testNode2()
 	{
