@@ -5,6 +5,7 @@ import java.io.FileReader;
 import com.opencsv.CSVReader;
 
 import model.data_structures.INode;
+import model.data_structures.MaxColaCP;
 import model.data_structures.Node;
 
 /**
@@ -28,7 +29,7 @@ public class MVCModelo{
 	{
 		tamano = 0;
 	}
-	
+
 	/**
 	 * Metodo que carga los archivos
 	 * @param prutaArchivo CSV
@@ -134,7 +135,7 @@ public class MVCModelo{
 	{
 		actual = primero;
 		double respuesta = 0;
-		
+
 		while(actual != null)
 		{
 			Double[] datos = (Double[]) actual.darDato();
@@ -146,7 +147,7 @@ public class MVCModelo{
 		}
 		return respuesta;
 	}
-	
+
 	/**
 	 * Indica el número de viajes en el mes indicado con la zona de origen indicada
 	 * @param mes Mes a buscar
@@ -157,7 +158,7 @@ public class MVCModelo{
 	{
 		actual = primero;
 		double respuesta = 0;
-		
+
 		while(actual != null)
 		{
 			Double[] datos = (Double[]) actual.darDato();
@@ -169,4 +170,55 @@ public class MVCModelo{
 		}
 		return respuesta;
 	}
+	//---------------------------------------------------------------------
+	//Parte A
+	//-------------------------------------------------------------------------------
+	public String[] letrasMasComunes(int N)
+	{
+		return null;
+	}
+	public double[] nodosDelimitanZonas(double longitid, double latitud)
+	{
+		return null;
+	}
+	public UBERTrip[] tiemposPromedioRango(int limiteBajo,int limiteAlto, int N)
+	{
+		return null;
+	}
+	//---------------------------------------------------------------------
+	//Parte B
+	//-------------------------------------------------------------------------------
+	public double[] zonasMasNorte(int N)
+	{
+		return null;
+	}
+	public double[] nodosPorLocalizacion(double latitud, double longitud)
+	{
+		return null;
+	}
+	public UBERTrip[] tiemposEspera(int limiteAlto,  int limiteBajo, int N)
+	{
+		return null;
+	}
+	//---------------------------------------------------------------------
+	//Parte C
+	//-------------------------------------------------------------------------------
+	public UBERTrip[] tiempoPromedioPorZona(int zonaSalida, int hora)
+	{
+		return null;
+	}
+	public UBERTrip[] tiempoPromedioPorRangoHora(int zonaSalida, int horaA, int horaB)
+	{
+		return null;
+	}
+	public Integer[] zonasMasNodos(int N)
+	{
+		return null;
+	}
+	public Integer[] tablaASCIIdatosFaltantes()
+	{
+		return null;
+	}
+	
 }
+
