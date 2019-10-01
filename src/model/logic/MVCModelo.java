@@ -5,7 +5,6 @@ import java.io.FileReader;
 import com.opencsv.CSVReader;
 
 import model.data_structures.INode;
-import model.data_structures.MaxColaCP;
 import model.data_structures.Node;
 
 /**
@@ -36,26 +35,9 @@ public class MVCModelo{
 	 */
 	public void cargarArchivoCSV(int numeroMes) throws Exception
 	{		
-		if(primero == null)
-		{
-			primero = new Node();
-			actual = primero;
-		}
-		else
-		{
-			actual = primero;
-			while(actual.darSiguente() != null)
-			{
-				actual = actual.darSiguente();
-			}
-			actual.asignarSiguiente(new Node());
-			actual = actual.darSiguente();
-		}
-
-		INode anterior = null;
 		boolean primeraLectura = true;
 
-		CSVReader reader = new CSVReader(new FileReader("./data/bogota-cadastral-2018-" + numeroMes + "-All-MonthlyAggregate.csv"));
+		CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + numeroMes + "-All-MonthlyAggregate.csv"));
 
 		for(String[] line: reader)
 		{
@@ -63,19 +45,10 @@ public class MVCModelo{
 			{
 				Double[] dato = {Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[5]), Double.parseDouble(line[6])}; 
 				actual.asignarDato(dato);
-				actual.asignarSiguiente(new Node());
-				anterior = actual;
-				actual = actual.darSiguente();
 				tamano++;
 			}
 			primeraLectura = false;
 		}
-
-		//Queda un nodo vacío, entonces se elimina
-		anterior.asignarSiguiente(null);
-		tamano--;
-
-		reader.close();
 	}
 
 	/**
@@ -170,55 +143,66 @@ public class MVCModelo{
 		}
 		return respuesta;
 	}
+	
 	//---------------------------------------------------------------------
 	//Parte A
-	//-------------------------------------------------------------------------------
+	//---------------------------------------------------------------------
+	
 	public String[] letrasMasComunes(int N)
 	{
 		return null;
 	}
+	
 	public double[] nodosDelimitanZonas(double longitid, double latitud)
 	{
 		return null;
 	}
+	
 	public UBERTrip[] tiemposPromedioRango(int limiteBajo,int limiteAlto, int N)
 	{
 		return null;
 	}
+	
 	//---------------------------------------------------------------------
 	//Parte B
-	//-------------------------------------------------------------------------------
+	//---------------------------------------------------------------------
+	
 	public double[] zonasMasNorte(int N)
 	{
 		return null;
 	}
+	
 	public double[] nodosPorLocalizacion(double latitud, double longitud)
 	{
 		return null;
 	}
+	
 	public UBERTrip[] tiemposEspera(int limiteAlto,  int limiteBajo, int N)
 	{
 		return null;
 	}
+	
 	//---------------------------------------------------------------------
 	//Parte C
-	//-------------------------------------------------------------------------------
+	//---------------------------------------------------------------------
+	
 	public UBERTrip[] tiempoPromedioPorZona(int zonaSalida, int hora)
 	{
 		return null;
 	}
+	
 	public UBERTrip[] tiempoPromedioPorRangoHora(int zonaSalida, int horaA, int horaB)
 	{
 		return null;
 	}
+	
 	public Integer[] zonasMasNodos(int N)
 	{
 		return null;
 	}
+	
 	public Integer[] tablaASCIIdatosFaltantes()
 	{
 		return null;
 	}
-	
 }
-
