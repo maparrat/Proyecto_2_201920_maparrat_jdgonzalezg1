@@ -63,21 +63,27 @@ public class Controller {
 				}
 				catch(InputMismatchException e)
 				{
-					System.out.println("Debe ingresar un valor numérico (1 o 2)\n---------");
+					System.out.println("Debe ingresar un valor numérico (1 o 4)\n---------");
 					break;
 				}
 
-				if(numeroTrimestre == 1 || numeroTrimestre == 2)
+				if(numeroTrimestre >= 1 && numeroTrimestre <= 4)
 				{
 					try
 					{
-						modelo.cargarArchivoViajes(numeroTrimestre);
+						modelo.cargarArchivosViajes(numeroTrimestre);
 						modelo.cargarArchivoNodos();
-						System.out.println("Archivo cargado");
-						System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");
+						modelo.cargarArchivoZonas();
+						System.out.println("Archivos cargado");
+						System.out.println("Numero actual de zonas: " + modelo.darTamanoZonas()+1 + "\n---------");
+						System.out.println("Numero actual de nodos: " + modelo.darTamanoNodos() + "\n---------");
+						System.out.println("Numero actual de viajes por mes: " + modelo.darTamanoViajesMonthly() + "\n---------");
+						System.out.println("Numero actual de viajes por día de la semana: " + modelo.darTamanoViajesWeekly() + "\n---------");
+						System.out.println("Numero actual de viajes por hora: " + modelo.darTamanoViajesHourly() + "\n---------");
 					}
 					catch (Exception e)
 					{
+						e.printStackTrace();
 						System.out.println("Se ha producido un error al cargar el archivo\n---------");
 					}
 				}
