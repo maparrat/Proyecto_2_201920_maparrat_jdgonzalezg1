@@ -18,7 +18,7 @@ public class TestMVCModelo
 		modelo= new MVCModelo();
 		try
 		{
-			modelo.cargarArchivoCSV(1);
+			modelo.cargarArchivoViajes(1);
 		}
 		catch(Exception e)
 		{

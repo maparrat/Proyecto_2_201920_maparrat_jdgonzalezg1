@@ -33,7 +33,7 @@ public class MVCModelo{
 	 * Metodo que carga los archivos
 	 * @param prutaArchivo CSV
 	 */
-	public void cargarArchivoCSV(int numeroMes) throws Exception
+	public void cargarArchivoViajes(int numeroMes) throws Exception
 	{		
 		boolean primeraLectura = true;
 
@@ -43,11 +43,26 @@ public class MVCModelo{
 		{
 			if(!primeraLectura)
 			{
-				Double[] dato = {Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[5]), Double.parseDouble(line[6])}; 
-				actual.asignarDato(dato);
+				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
+				actual.asignarDato(nuevo);
 				tamano++;
 			}
 			primeraLectura = false;
+		}
+	}
+
+	public void cargarArchivoNodos() throws Exception
+	{
+		if(xx.darTamano() == 0)
+		{
+			CSVReader reader = new CSVReader(new FileReader("data/Nodes_of_red_vial-wgs84_shp.txt.csv"));
+
+			for(String[] line: reader)
+			{
+				NodoMallaVial nuevo = new NodoMallaVial(Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2])); 
+				actual.asignarDato(nuevo);
+				tamano++;
+			}
 		}
 	}
 
@@ -60,147 +75,63 @@ public class MVCModelo{
 		return tamano;
 	}
 
-	/**
-	 * Crea una lista encadenada con los datos buscados
-	 * @param mes Mes a buscar
-	 * @param zonaOrigen Zona de origen a buscar
-	 * @return Un nodo que inicia la lista encadenada de respuesta
-	 */
-	public Node busquedaPorMesYZonaOrigen(double mes, double zonaOrigen)
-	{
-		actual = primero;
-
-		Node respuesta = new Node();
-		Node anteriorRespuesta = null;
-		Node actualRespuesta = respuesta;
-
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes && datos[0] == zonaOrigen)
-			{
-				actualRespuesta.asignarDato(datos);
-				actualRespuesta.asignarSiguiente(new Node());
-				anteriorRespuesta = actualRespuesta;
-				actualRespuesta = actualRespuesta.darSiguente();
-			}
-			actual = actual.darSiguente();
-		}
-
-		if(respuesta.darDato() == null)
-		{
-			return null;
-		}
-		else
-		{
-			//Queda un nodo de más
-			anteriorRespuesta.asignarSiguiente(null);
-			return respuesta;
-		}
-	}
-
-	/**
-	 * Indica el número de viajes en el mes indicado
-	 * @param mes Mes a buscar
-	 * @return el número de viajes en el mes indicado
-	 */
-	public double numeroViajesSegunMes(double mes)
-	{
-		actual = primero;
-		double respuesta = 0;
-
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes)
-			{
-				respuesta++;
-			}
-			actual = actual.darSiguente();
-		}
-		return respuesta;
-	}
-
-	/**
-	 * Indica el número de viajes en el mes indicado con la zona de origen indicada
-	 * @param mes Mes a buscar
-	 * @param zonaDeOrigen Zona de origen a buscar
-	 * @return el número de viajes en el mes indicado con la zona de origen indicada
-	 */
-	public double numeroViajesSegunMesYZonaOrigen(double mes, double zonaDeOrigen)
-	{
-		actual = primero;
-		double respuesta = 0;
-
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes && datos[0] == zonaDeOrigen)
-			{
-				respuesta++;
-			}
-			actual = actual.darSiguente();
-		}
-		return respuesta;
-	}
-	
 	//---------------------------------------------------------------------
 	//Parte A
 	//---------------------------------------------------------------------
-	
+
 	public String[] letrasMasComunes(int N)
 	{
 		return null;
 	}
-	
-	public double[] nodosDelimitanZonas(double longitid, double latitud)
+
+	public double[] nodosQuelimitanZonas(double longitid, double latitud)
 	{
 		return null;
 	}
-	
-	public UBERTrip[] tiemposPromedioRango(int limiteBajo,int limiteAlto, int N)
+
+	public UBERTrip[] tiemposPromedioEnRango(int limiteBajo,int limiteAlto, int N)
 	{
 		return null;
 	}
-	
+
 	//---------------------------------------------------------------------
 	//Parte B
 	//---------------------------------------------------------------------
-	
-	public double[] zonasMasNorte(int N)
+
+	public double[] zonasMasAlNorte(int N)
 	{
 		return null;
 	}
-	
+
 	public double[] nodosPorLocalizacion(double latitud, double longitud)
 	{
 		return null;
 	}
-	
-	public UBERTrip[] tiemposEspera(int limiteAlto,  int limiteBajo, int N)
+
+	public UBERTrip[] tiemposDeEspera(int limiteAlto,  int limiteBajo, int N)
 	{
 		return null;
 	}
-	
+
 	//---------------------------------------------------------------------
 	//Parte C
 	//---------------------------------------------------------------------
-	
+
 	public UBERTrip[] tiempoPromedioPorZona(int zonaSalida, int hora)
 	{
 		return null;
 	}
-	
+
 	public UBERTrip[] tiempoPromedioPorRangoHora(int zonaSalida, int horaA, int horaB)
 	{
 		return null;
 	}
-	
+
 	public Integer[] zonasMasNodos(int N)
 	{
 		return null;
 	}
-	
+
 	public Integer[] tablaASCIIdatosFaltantes()
 	{
 		return null;

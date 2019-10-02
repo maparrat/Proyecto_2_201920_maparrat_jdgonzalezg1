@@ -71,7 +71,8 @@ public class Controller {
 				{
 					try
 					{
-						modelo.cargarArchivoCSV(numeroTrimestre);
+						modelo.cargarArchivoViajes(numeroTrimestre);
+						modelo.cargarArchivoNodos();
 						System.out.println("Archivo cargado");
 						System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");
 					}
@@ -86,95 +87,7 @@ public class Controller {
 				}
 				break;
 
-			case 2:
-
-				double mes;
-				double zonaOrigen;
-				try
-				{
-					System.out.println("--------- \nDar mes a buscar: ");
-					mes = lector.nextInt();
-					System.out.println("--------- \nDar id zona de origen a buscar: ");
-					zonaOrigen = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar valores numéricos\n---------");
-					break;
-				}
-
-				Node lista = modelo.busquedaPorMesYZonaOrigen(mes, zonaOrigen);
-				if (lista == null)
-				{
-					System.out.println("No hay viajes registrados con las condiciones dadas.\n---------");
-				}
-				else
-				{
-					while(lista != null)
-					{
-						Double[] datos = (Double[]) lista.darDato();
-						System.out.println("Id zona de origen: " + datos[0] + "\nId zona de destino: " + datos[1] + "\nTiempo promedio: " + datos[3] + "\nDesviación estandar: " + datos[4] + "\n---------");
-						lista = lista.darSiguente();
-					}
-				}
-				break;
-
-			case 3:
-				System.out.println("El número de viajes reportados en el semestre es: " + modelo.darTamano() + "\n---------");						
-				break;
-
-			case 4:
-				if(modelo.darTamano() == 0)
-				{
-					System.out.println("No hay viajes registrados en ningún mes\n---------");
-				}
-				else
-				{
-					double mesABuscar;
-					try
-					{
-						System.out.println("--------- \nDar mes a buscar: ");
-						mesABuscar = lector.nextInt();
-					}
-					catch(InputMismatchException e)
-					{
-						System.out.println("Debe ingresar un valor numérico\n---------");
-						break;
-					}					
-
-					double cantidad = modelo.numeroViajesSegunMes(mesABuscar);
-					System.out.println("El número de viajes reportados en el mes es: " + cantidad + "\nEl porcentaje respecto al total de viajes del semestre es: "+ (cantidad/modelo.darTamano())*100 + "\n---------");
-				}
-				break;
-
-			case 5:
-				if(modelo.darTamano() == 0)
-				{
-					System.out.println("No hay viajes registrados en ningún mes\n---------");
-				}
-				else
-				{
-					double mesABuscar;
-					double zonaDeOrigen;
-					try
-					{
-						System.out.println("--------- \nDar mes a buscar: ");
-						mesABuscar = lector.nextInt();
-						System.out.println("--------- \nDar id zona de origen a buscar: ");
-						zonaDeOrigen = lector.nextInt();
-					}
-					catch(InputMismatchException e)
-					{
-						System.out.println("Debe ingresar valores numéricos\n---------");
-						break;
-					}
-
-					double cantidad = modelo.numeroViajesSegunMesYZonaOrigen(mesABuscar, zonaDeOrigen);
-					System.out.println("El número de viajes reportados en el mes es para esa zona es: " + cantidad + "\nEl porcentaje respecto al total de viajes del mes es: "+ (cantidad/modelo.numeroViajesSegunMes(mesABuscar))*100 + "\n---------");
-				}
-				break;
-
-			case 6: 
+			case 2: 
 				System.out.println("--------- \n Hasta pronto !! \n---------"); 
 				lector.close();
 				fin = true;
