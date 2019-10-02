@@ -1,15 +1,9 @@
 package model.data_structures;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 /**
- * 
  * Tomado de Algorithms 4th edition by Robert Sedgewick and Kevin Wayne (2011)
  * Consultado el 20/09/19
  * Disponible en http://www.albertstam.com/Algorithms.pdf
- *
- * @param <T>
  */
 
 public class MaxHeapCP <T extends Comparable<T>> implements IMaxHeapCP<T>, Cloneable
@@ -42,7 +36,7 @@ public class MaxHeapCP <T extends Comparable<T>> implements IMaxHeapCP<T>, Clone
 
 	public int darNumeroElementos()
 	{
-		return tamanoAct-1;
+		return tamanoAct;
 	}
 
 	public void agregar(T elemento)

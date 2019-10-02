@@ -75,7 +75,7 @@ public class Controller {
 						modelo.cargarArchivoNodos();
 						modelo.cargarArchivoZonas();
 						System.out.println("Archivos cargado");
-						System.out.println("Numero actual de zonas: " + modelo.darTamanoZonas()+1 + "\n---------");
+						System.out.println("Numero actual de zonas: " + modelo.darTamanoZonas()  + "\n---------");
 						System.out.println("Numero actual de nodos: " + modelo.darTamanoNodos() + "\n---------");
 						System.out.println("Numero actual de viajes por mes: " + modelo.darTamanoViajesMonthly() + "\n---------");
 						System.out.println("Numero actual de viajes por día de la semana: " + modelo.darTamanoViajesWeekly() + "\n---------");

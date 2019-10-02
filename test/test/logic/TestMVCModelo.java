@@ -15,7 +15,8 @@ public class TestMVCModelo
 	@Before
 	public void setUp()
 	{
-		modelo= new MVCModelo();
+		modelo = new MVCModelo();
+		
 		try
 		{
 			modelo.cargarArchivosViajes(1);
@@ -29,6 +30,8 @@ public class TestMVCModelo
 	@Test
 	public void testDarTamano()
 	{
-		assertTrue("Deberian haber elementos", modelo.darTamanoViajesWeekly()>1000000);
+		assertTrue("Deberian haber elementos", modelo.darTamanoViajesHourly() > 1);
+		assertTrue("Deberian haber elementos", modelo.darTamanoViajesWeekly() > 1);
+		assertTrue("Deberian haber elementos", modelo.darTamanoViajesMonthly() > 1);
 	}	
 }

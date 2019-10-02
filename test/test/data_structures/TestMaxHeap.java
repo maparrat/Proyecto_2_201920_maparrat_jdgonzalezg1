@@ -31,23 +31,23 @@ public class TestMaxHeap
 	}
 
 	@Test
-	public void testPut()
+	public void testAgregar()
 	{
 		cp.agregar(5);
 		cp.agregar(10);
 		cp.agregar(11);
 
 		System.out.println(cp.darNumeroElementos());
-		assertTrue(cp.darNumeroElementos()+1 == 3);
+		assertTrue(cp.darNumeroElementos() == 3);
 	}
 
 	@Test
-	public void testDelete()
+	public void testSacarMax()
 	{
 		setUp2();
 		cp.sacarMax();
 		System.out.println(cp.darNumeroElementos());
 
-		assertTrue(cp.darNumeroElementos()+1 == 9);
+		assertTrue(cp.darNumeroElementos() == 9);
 	}
 }

@@ -1,10 +1,6 @@
 package test.data_structures;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,19 +31,6 @@ public class TestRedBlackBST
 	}
 
 	@Test
-	public void testPut()
-	{
-		bt.put(5, "A");
-		bt.put(10, "B");
-		bt.put(11, "C");
-		bt.put(11, "D");
-
-		assertTrue(bt.contains(11));
-		assertTrue(bt.size() == 3);
-		assertNotNull(bt.get(10));
-	}
-
-	@Test
 	public void testGet()
 	{
 		setUp2();
@@ -61,6 +44,28 @@ public class TestRedBlackBST
 		assertNotEquals("A", bt.get(8));
 		assertNotEquals("A", bt.get(9));
 		assertNotEquals("A", bt.get(10));
+	}
+	
+	@Test
+	public void testContains()
+	{
+		bt.put(5, "A");
+		
+		assertTrue(bt.contains(5));
+		assertFalse(bt.contains(6));
+	}
+	
+	@Test
+	public void testPut()
+	{
+		bt.put(5, "A");
+		bt.put(10, "B");
+		bt.put(11, "C");
+		bt.put(11, "D");
+
+		assertTrue(bt.contains(11));
+		assertTrue(bt.size() == 3);
+		assertNotNull(bt.get(10));
 	}
 
 	@Test
