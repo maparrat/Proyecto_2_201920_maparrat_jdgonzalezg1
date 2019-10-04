@@ -47,4 +47,9 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 		}
 		return 0;
 	}
+	
+	public String darNombre()
+	{
+		return DISPLAY_NAME;
+	}
 }

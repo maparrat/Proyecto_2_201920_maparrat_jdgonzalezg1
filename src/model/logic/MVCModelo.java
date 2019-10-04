@@ -2,6 +2,10 @@ package model.logic;
 
 import java.io.FileReader;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import com.opencsv.CSVReader;
 
 import com.google.gson.*;
@@ -9,6 +13,7 @@ import com.google.gson.*;
 import model.data_structures.INode;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.Node;
+import model.data_structures.Queue;
 import model.data_structures.RedBlackBST;
 import model.data_structures.SeparateChaining;
 
@@ -21,7 +26,7 @@ public class MVCModelo{
 	 * Atributos del modelo del mundo
 	 */
 	private MaxHeapCP<ZonaUBER> zonas;
-	
+
 	private SeparateChaining nodos;
 
 	private RedBlackBST<String, UBERTrip> viajesMonthly, viajesWeekly, viajesHourly;
@@ -47,7 +52,7 @@ public class MVCModelo{
 		boolean primeraLectura = true;
 
 		CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-MonthlyAggregate.csv"));
-		
+
 		for(String[] line: reader)
 		{
 			if(!primeraLectura)
@@ -58,11 +63,11 @@ public class MVCModelo{
 			}
 			primeraLectura = false;
 		}
-		
+
 		primeraLectura = true;
 
 		reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-WeeklyAggregate.csv"));
-		
+
 		for(String[] line: reader)
 		{
 			if(!primeraLectura)
@@ -73,13 +78,13 @@ public class MVCModelo{
 			}
 			primeraLectura = false;
 		}
-		
+
 		primeraLectura = true;
 
 		reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-HourlyAggregate.csv"));
 
 		int i = 0;
-		
+
 		for(String[] line: reader)
 		{
 			if(!primeraLectura && i < 4000000)
@@ -106,11 +111,42 @@ public class MVCModelo{
 			}
 		}
 	}
-	
+
 
 	public void cargarArchivoZonas()
 	{
-		
+		JSONParser jsonParser = new JSONParser();
+
+		try (FileReader reader = new FileReader("data/bogota_cadastral.json"))
+		{
+			Object obj = jsonParser.parse(reader);
+
+			JSONObject archivo = (JSONObject) obj;
+			JSONArray array = (JSONArray) archivo.get("features");
+
+			for(int i = 0; i < array.size(); i++)
+			{
+				JSONObject actual = (JSONObject) array.get(i);
+				
+				JSONObject geometry = (JSONObject) actual.get("geometry");
+				Object[] coordinates1 = ((JSONArray) (((JSONArray) ((Object[]) (((JSONArray) geometry.get("coordinates")).toArray()))[0]).toArray())[0]).toArray();
+				
+				Queue<double[]> coordenadas = new Queue<>();
+				
+				for(int j = 0; j < coordinates1.length; j++)
+				{
+					double[] act = {(Double) ((JSONArray) coordinates1[j]).toArray()[0], (Double) ((JSONArray) coordinates1[j]).toArray()[1]};
+					coordenadas.enqueue(act);
+				}				
+				
+				JSONObject properties = (JSONObject) actual.get("properties");
+
+				ZonaUBER nuevo = new ZonaUBER((String)geometry.get("type"), coordenadas, ((Long)properties.get("cartodb_id")).intValue(), (String)properties.get("scacodigo"), ((Long)properties.get("scatipo")).intValue(), (String)properties.get("scanombre"), (double)properties.get("shape_leng"), (double)properties.get("shape_area"), (String)properties.get("MOVEMENT_ID"), (String)properties.get("DISPLAY_NAME"));
+				zonas.agregar(nuevo);
+			}
+		}
+		catch (Exception e)
+		{e.printStackTrace();}
 	}
 
 	/**
@@ -121,22 +157,22 @@ public class MVCModelo{
 	{
 		return zonas.darNumeroElementos();
 	}
-	
+
 	public int darTamanoNodos()
 	{
 		return nodos.darNumeroDeElementos();
 	}
-	
+
 	public int darTamanoViajesMonthly()
 	{
 		return viajesMonthly.size();
 	}
-	
+
 	public int darTamanoViajesWeekly()
 	{
 		return viajesWeekly.size();
 	}
-	
+
 	public int darTamanoViajesHourly()
 	{
 		return viajesHourly.size();
