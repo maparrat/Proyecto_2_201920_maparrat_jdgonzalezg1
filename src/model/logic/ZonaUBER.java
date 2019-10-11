@@ -52,4 +52,49 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 	{
 		return DISPLAY_NAME;
 	}
+	
+	public String darMID()
+	{
+		return MOVEMENT_ID;
+	}
+	
+	public String darType()
+	{
+		return type;
+	}
+	
+	public Queue darCoordinates()
+	{
+		return coordinates;
+	}
+	
+	public String darScanombre()
+	{
+		return scanombre;
+	}
+	
+	public double darShape_leng()
+	{
+		return shape_leng;
+	}
+	
+	public double darShape_area()
+	{
+		return shape_area;
+	}
+	
+	public int darCartob_id()
+	{
+		return cartodb_id;
+	}
+	
+	public String darScacodigo()
+	{
+		return scacodigo;
+	}
+	
+	public int darScatipo()
+	{
+		return scatipo;
+	}
 }
