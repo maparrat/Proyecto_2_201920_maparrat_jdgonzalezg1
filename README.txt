@@ -8,8 +8,8 @@ https://mvnrepository.com/artifact/com.opencsv/opencsv/4.0
 https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/3.8.1
 
 JSON de:
-https://search.maven.org/artifact/com.google.code.gson/gson/2.8.5/jar
+http://www.java2s.com/Code/Jar/j/Downloadjsonsimple111jar.htm
 
-ImplementaciÃ³n estructuras de datos:
+Implementación estructuras de datos:
 Tomadas de:
 https://algs4.cs.princeton.edu/code/
