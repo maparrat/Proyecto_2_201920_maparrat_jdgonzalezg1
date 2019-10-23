@@ -3,14 +3,14 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import model.data_structures.Node;
 import model.logic.MVCModelo;
+import model.logic.MVCModelo.contadora;
 import view.MVCView;
 
 public class Controller {
 
 	public final static int maximoDeDatos = 20;
-	
+
 	/* Instancia del Modelo*/
 	private MVCModelo modelo;
 
@@ -41,7 +41,7 @@ public class Controller {
 
 			String in;
 			in = lector.next();
-			
+
 			int option;
 			try
 			{
@@ -94,10 +94,48 @@ public class Controller {
 				break;
 
 			case 2: 
-				System.out.println("--------- \n Hasta pronto !! \n---------"); 
-				lector.close();
-				fin = true;
-				break;	
+				int numeroLetras;
+				try
+				{
+					System.out.println("--------- \nDar cantidad de letras a buscar: ");
+					numeroLetras = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				if(numeroLetras >= 1 && numeroLetras <= 27)
+				{
+					try
+					{
+						contadora[] letras = modelo.letrasMasComunes(numeroLetras);
+
+						for (contadora contadoraActual : letras) {
+							System.out.println("Letra: " + contadoraActual.darLetra());
+							while(contadoraActual.darZonas().hasNext()){
+								System.out.println("Nombre de la zona: " + contadoraActual.darZonas().next().darScanombre());
+							}
+							System.out.println("\n---------");
+
+						}
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+						System.out.println("Se ha producido un error al cargar el archivo\n---------");
+					}
+				}
+				else
+				{
+					System.out.println("Ingrese un valor válido (1 a 27)\n---------");	
+				}
+				break;
+
+			case 3:
+
+				break;
 
 			default: 
 				System.out.println("--------- \n Opcion Invalida !! \n---------");

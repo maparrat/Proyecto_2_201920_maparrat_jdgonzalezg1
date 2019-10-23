@@ -31,7 +31,7 @@ public class MaxHeapCP <T extends Comparable<T>> implements IMaxHeapCP<T>, Clone
 
 	public T[] darElementos() 
 	{
-		return elementos;
+		return (T[])elementos;
 	}
 
 	public int darNumeroElementos()

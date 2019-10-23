@@ -2,6 +2,8 @@ package model.logic;
 
 import java.io.FileReader;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import com.opencsv.CSVReader;
 
 import model.data_structures.MaxHeapCP;
+import model.data_structures.Node;
 import model.data_structures.Queue;
 import model.data_structures.RedBlackBST;
 import model.data_structures.SeparateChaining;
@@ -49,7 +52,7 @@ public class MVCModelo{
 
 		CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-MonthlyAggregate.csv"));
 
-		for(String[] line: reader)
+		for(String[] line: reader )
 		{
 			if(!primeraLectura)
 			{
@@ -80,10 +83,12 @@ public class MVCModelo{
 		reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-HourlyAggregate.csv"));
 
 		int i = 0;
-
-		for(String[] line: reader)
+		
+		for (int l = 0; l < 1000000; l++)
 		{
-			if(!primeraLectura && i < 4000000)
+			String[] line = reader.readNext();
+		//}for(String[] line: reader){
+			if(!primeraLectura && i < 400000)
 			{
 				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
 				String key = trimestre + "-" + line[0] + "-" + line[1];
@@ -123,18 +128,18 @@ public class MVCModelo{
 			for(int i = 0; i < array.size(); i++)
 			{
 				JSONObject actual = (JSONObject) array.get(i);
-				
+
 				JSONObject geometry = (JSONObject) actual.get("geometry");
 				Object[] coordinates1 = ((JSONArray) (((JSONArray) ((Object[]) (((JSONArray) geometry.get("coordinates")).toArray()))[0]).toArray())[0]).toArray();
-				
+
 				Queue<double[]> coordenadas = new Queue<>();
-				
+
 				for(int j = 0; j < coordinates1.length; j++)
 				{
 					double[] act = {(Double) ((JSONArray) coordinates1[j]).toArray()[0], (Double) ((JSONArray) coordinates1[j]).toArray()[1]};
 					coordenadas.enqueue(act);
 				}				
-				
+
 				JSONObject properties = (JSONObject) actual.get("properties");
 
 				ZonaUBER nuevo = new ZonaUBER((String)geometry.get("type"), coordenadas, ((Long)properties.get("cartodb_id")).intValue(), (String)properties.get("scacodigo"), ((Long)properties.get("scatipo")).intValue(), (String)properties.get("scanombre"), (double)properties.get("shape_leng"), (double)properties.get("shape_area"), (String)properties.get("MOVEMENT_ID"), (String)properties.get("DISPLAY_NAME"));
@@ -173,14 +178,84 @@ public class MVCModelo{
 	{
 		return viajesHourly.size();
 	}
+	public class contadora implements Comparable<contadora>
+	{
+		private  int cantidadVeces ;
+		private  String letra;
+		
+		private Queue<ZonaUBER> zonas;
+		public contadora(String zletra)
+		{
+			letra = zletra;
+			cantidadVeces = 1;
+			zonas = new Queue<>();
+		}
+		public int darCantidadVeces()
+		{
+			return cantidadVeces;
+		}
+		public String darLetra()
+		{
+			return letra;
+		}
+		
+		public Queue<ZonaUBER> darZonas()
+		{
+			return zonas;
+		}
 
+		@Override
+		public int compareTo(contadora param) 
+		{
+			if(darCantidadVeces() > param.darCantidadVeces())
+			{
+				return 1;
+			}
+			else if(darCantidadVeces() <  param.darCantidadVeces())
+			{
+				return -1;
+			}
+			return 0;
+		}
+	}
 	//---------------------------------------------------------------------
 	//Parte A
 	//---------------------------------------------------------------------
 
-	public String[] letrasMasComunes(int N)
+	public contadora[] letrasMasComunes(int N)
 	{
-		return null;
+		MaxHeapCP<ZonaUBER> zonasCopia = zonas;
+		int contador = 0;
+		contadora[] buscador = new contadora[27];
+		while(zonasCopia.darNumeroElementos() > 0)
+		{
+			ZonaUBER zonaActual = zonasCopia.sacarMax();
+			String pletra = ""+zonaActual.darScanombre().charAt(0);
+			
+			boolean existe = false;
+			for(int j= 0; j< buscador.length && existe == false; j++)
+			{
+				if (buscador[j] != null && buscador[j].darLetra().equalsIgnoreCase(pletra))
+				{
+					existe = true;
+					buscador[j].cantidadVeces ++;
+					buscador[j].zonas.enqueue(zonaActual);
+				}
+			}
+			if(!existe)
+			{
+				buscador[contador] = new contadora(pletra);
+				buscador[contador++].zonas.enqueue(zonaActual);
+			}
+		}
+		
+		MaxHeapCP<contadora> ordenado = new MaxHeapCP<>(27);
+		for (int z = 0 ; z < N; z++)
+		{
+			ordenado.agregar(buscador[z]);
+		}
+		
+		return (contadora[])ordenado.darElementos();
 	}
 
 	public double[] nodosQuelimitanZonas(double longitid, double latitud)
