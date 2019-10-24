@@ -82,18 +82,15 @@ public class MVCModelo{
 
 		reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-HourlyAggregate.csv"));
 
-		int i = 0;
-		
-		for (int l = 0; l < 1000000; l++)
+		for (int i = 0; i < 1000000; i++)
 		{
 			String[] line = reader.readNext();
-		//}for(String[] line: reader){
-			if(!primeraLectura && i < 400000)
+			
+			if(!primeraLectura)
 			{
 				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
 				String key = trimestre + "-" + line[0] + "-" + line[1];
 				viajesHourly.put(key, nuevo);
-				i++;
 			}
 			primeraLectura = false;
 		}
@@ -112,7 +109,6 @@ public class MVCModelo{
 			}
 		}
 	}
-
 
 	public void cargarArchivoZonas()
 	{
@@ -178,11 +174,12 @@ public class MVCModelo{
 	{
 		return viajesHourly.size();
 	}
+
 	public class contadora implements Comparable<contadora>
 	{
 		private  int cantidadVeces ;
 		private  String letra;
-		
+
 		private Queue<ZonaUBER> zonas;
 		public contadora(String zletra)
 		{
@@ -198,13 +195,12 @@ public class MVCModelo{
 		{
 			return letra;
 		}
-		
+
 		public Queue<ZonaUBER> darZonas()
 		{
 			return zonas;
 		}
 
-		@Override
 		public int compareTo(contadora param) 
 		{
 			if(darCantidadVeces() > param.darCantidadVeces())
@@ -218,20 +214,22 @@ public class MVCModelo{
 			return 0;
 		}
 	}
+
 	//---------------------------------------------------------------------
 	//Parte A
 	//---------------------------------------------------------------------
 
-	public contadora[] letrasMasComunes(int N)
+	public MaxHeapCP<contadora> letrasMasComunes(int N)
 	{
 		MaxHeapCP<ZonaUBER> zonasCopia = zonas;
 		int contador = 0;
 		contadora[] buscador = new contadora[27];
+
 		while(zonasCopia.darNumeroElementos() > 0)
 		{
 			ZonaUBER zonaActual = zonasCopia.sacarMax();
-			String pletra = ""+zonaActual.darScanombre().charAt(0);
-			
+			String pletra = "" + zonaActual.darScanombre().charAt(0);
+
 			boolean existe = false;
 			for(int j= 0; j< buscador.length && existe == false; j++)
 			{
@@ -248,14 +246,14 @@ public class MVCModelo{
 				buscador[contador++].zonas.enqueue(zonaActual);
 			}
 		}
-		
+
 		MaxHeapCP<contadora> ordenado = new MaxHeapCP<>(27);
 		for (int z = 0 ; z < N; z++)
 		{
 			ordenado.agregar(buscador[z]);
 		}
-		
-		return (contadora[])ordenado.darElementos();
+
+		return ordenado;
 	}
 
 	public double[] nodosQuelimitanZonas(double longitid, double latitud)

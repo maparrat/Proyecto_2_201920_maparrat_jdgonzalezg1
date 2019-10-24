@@ -3,6 +3,7 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import model.data_structures.MaxHeapCP;
 import model.logic.MVCModelo;
 import model.logic.MVCModelo.contadora;
 import view.MVCView;
@@ -93,7 +94,8 @@ public class Controller {
 				}
 				break;
 
-			case 2: 
+			case 2:
+				//1A
 				int numeroLetras;
 				try
 				{
@@ -110,21 +112,38 @@ public class Controller {
 				{
 					try
 					{
-						contadora[] letras = modelo.letrasMasComunes(numeroLetras);
+						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(23, numeroLetras));
 
-						for (contadora contadoraActual : letras) {
-							System.out.println("Letra: " + contadoraActual.darLetra());
-							while(contadoraActual.darZonas().hasNext()){
-								System.out.println("Nombre de la zona: " + contadoraActual.darZonas().next().darScanombre());
+						int i = 1;
+						
+						while(letras.darNumeroElementos() > 0)
+						{
+							contadora contadoraActual = letras.sacarMax();
+							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
+							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
+							System.out.println("Primeras zonas con esta letra: ");
+							
+							int j = 1;
+							
+							while(contadoraActual.darZonas().hasNext() && j <= maximoDeDatos)
+							{
+								System.out.println("Nombre de la zona #" + j + ": " + contadoraActual.darZonas().next().darScanombre());
+								j++;
 							}
-							System.out.println("\n---------");
-
+							System.out.println("---------");
+							
+							i++;
 						}
+												
+						if(numeroLetras>23)
+						{System.out.println("(Solo hay 23 letras que son iniciales de las zonas)");}
+						
+						System.out.println("(Se imprimen hasta 20 zonas por letra)\n---------");
+
 					}
 					catch (Exception e)
 					{
 						e.printStackTrace();
-						System.out.println("Se ha producido un error al cargar el archivo\n---------");
 					}
 				}
 				else
@@ -134,7 +153,113 @@ public class Controller {
 				break;
 
 			case 3:
+				//2A
+				
+				break;
+				
+			case 4:
+				//3A
+				
+				break;
+				
+			case 5:
+				//1B
+				
+				int numeroZonas;
+				try
+				{
+					System.out.println("--------- \nDar cantidad de zonas a buscar: ");
+					numeroZonas = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
 
+				if(numeroZonas >= 1)
+				{
+					try
+					{
+						//
+						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(1160, numeroZonas));
+
+						int i = 1;
+						
+						while(letras.darNumeroElementos() > 0)
+						{
+							contadora contadoraActual = letras.sacarMax();
+							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
+							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
+							System.out.println("Primeras zonas con esta letra: ");
+							
+							int j = 1;
+							
+							while(contadoraActual.darZonas().hasNext() && j <= maximoDeDatos)
+							{
+								System.out.println("Nombre de la zona #" + j + ": " + contadoraActual.darZonas().next().darScanombre());
+								j++;
+							}
+							System.out.println("---------");
+							
+							i++;
+							
+							//
+						}
+												
+						if(numeroZonas>1160)
+						{System.out.println("(Solo hay 1160 zonas)");}
+						
+						System.out.println("(Se imprimen hasta 20 zonas por letra)\n---------");
+
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					System.out.println("Ingrese un valor válido\n---------");	
+				}				
+
+				break;
+				
+			case 6:
+				//2B
+
+				break;
+				
+			case 7:
+				//3B
+
+				break;
+				
+			case 8:
+				//1C
+
+				break;
+				
+			case 9:
+				//2C
+
+				break;
+				
+			case 10:
+				//3C
+
+				break;
+				
+			case 11:
+				//4C
+
+				break;
+				
+			case 12:
+
+				System.out.println("--------- \n Hasta pronto !! \n---------"); 
+				lector.close();
+				fin = true;
 				break;
 
 			default: 
