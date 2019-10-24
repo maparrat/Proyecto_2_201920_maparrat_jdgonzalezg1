@@ -9,15 +9,14 @@ public class UBERTrip implements Comparable<UBERTrip>
 	
 	private float mtt, sdtt, gmtt, gsdtt;
 	
-	public UBERTrip(short pSourceid, short pDstid, short pHod, float pMtt, float pSdtt, float pGmtt, float pGsdtt)
+	public UBERTrip(short pSourceid, short pDstid, short pHod, float pMtt, float pSdtt)
 	{
 		sourceid = pSourceid;
 		dstid = pDstid;
 		hod = pHod;
 		mtt = pMtt;
 		sdtt = pSdtt;
-		gmtt = pGmtt;
-		gsdtt = pGsdtt;
+	
 	}
 	
 	/**
@@ -63,13 +62,28 @@ public class UBERTrip implements Comparable<UBERTrip>
 		}		
 		return 0;
 	}
-	
+	public short darIdorigen()
+	{
+		return sourceid;
+	}
 	/**
 	 * Retorna el dato de la ID de destino
 	 * @return la ID del destino
 	 */
-	public double darPrimerdato()
+	public short darIddestino()
 	{
 		return dstid;
+	}
+	public short darTiempo()
+	{
+		return hod;
+	}
+	public float darMeanTravelTime()
+	{
+		return mtt;
+	}
+	public float darDesviacion()
+	{
+		return sdtt;
 	}
 }

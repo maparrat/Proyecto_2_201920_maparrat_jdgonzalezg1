@@ -27,8 +27,8 @@ public class MVCModelo{
 	private MaxHeapCP<ZonaUBER> zonas;
 
 	private SeparateChaining nodos;
-
-	private RedBlackBST<String, UBERTrip> viajesMonthly, viajesWeekly, viajesHourly;
+    private  Queue listaViajes;
+	private RedBlackBST<Integer, UBERTrip> viajesMonthly, viajesWeekly, viajesHourly, viajesMonthyDesviacion;
 
 	/**
 	 * Constructor del modelo del mundo
@@ -38,6 +38,8 @@ public class MVCModelo{
 		zonas = new MaxHeapCP<>(1);
 		nodos = new SeparateChaining<>(1);
 		viajesMonthly = new RedBlackBST<>();
+		viajesMonthyDesviacion =  new RedBlackBST<>();
+		listaViajes = new Queue<>();
 		viajesWeekly = new RedBlackBST<>();
 		viajesHourly = new RedBlackBST<>();
 	}
@@ -56,9 +58,11 @@ public class MVCModelo{
 		{
 			if(!primeraLectura)
 			{
-				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
-				String key = trimestre + "-" + line[0] + "-" + line[1];
+				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
+				Integer key = (int)(Double.parseDouble(line[3]));
+				Integer key2 = (int)(Double.parseDouble(line[4]));
 				viajesMonthly.put(key, nuevo);
+				viajesMonthyDesviacion.put(key2, nuevo);
 			}
 			primeraLectura = false;
 		}
@@ -71,8 +75,9 @@ public class MVCModelo{
 		{
 			if(!primeraLectura)
 			{
-				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
-				String key = trimestre + "-" + line[0] + "-" + line[1];
+				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
+				Integer key = (int)(Double.parseDouble(line[3]));
+
 				viajesWeekly.put(key, nuevo);
 			}
 			primeraLectura = false;
@@ -82,15 +87,17 @@ public class MVCModelo{
 
 		reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-" + trimestre + "-All-HourlyAggregate.csv"));
 
-		for (int i = 0; i < 1000000; i++)
+		for (int i = 0; i < 100000; i++)
 		{
 			String[] line = reader.readNext();
 			
 			if(!primeraLectura)
 			{
-				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6])); 
-				String key = trimestre + "-" + line[0] + "-" + line[1];
+				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
+				Integer key = (int)(Double.parseDouble(line[2]));
+
 				viajesHourly.put(key, nuevo);
+				listaViajes.enqueue(nuevo);
 			}
 			primeraLectura = false;
 		}
@@ -261,9 +268,10 @@ public class MVCModelo{
 		return null;
 	}
 
-	public UBERTrip[] tiemposPromedioEnRango(int limiteBajo,int limiteAlto, int N)
+	public Queue<UBERTrip> tiemposPromedioEnRango(int limiteBajo,int limiteAlto)
 	{
-		return null;
+		Queue<UBERTrip> respuesta = (Queue<UBERTrip>) viajesMonthly.valuesInRange(limiteBajo,limiteAlto);
+		return respuesta;
 	}
 
 	//---------------------------------------------------------------------
@@ -280,23 +288,59 @@ public class MVCModelo{
 		return null;
 	}
 
-	public UBERTrip[] tiemposDeEspera(int limiteAlto,  int limiteBajo, int N)
+	public Queue<UBERTrip> tiemposDeEspera(int limiteAlto,  int limiteBajo)
 	{
-		return null;
+		Queue<UBERTrip> respuesta = (Queue<UBERTrip>) viajesMonthyDesviacion.valuesInRange(limiteBajo,limiteAlto);
+		return respuesta;
 	}
 
 	//---------------------------------------------------------------------
 	//Parte C
 	//---------------------------------------------------------------------
 
-	public UBERTrip[] tiempoPromedioPorZona(int zonaSalida, int hora)
+	public Queue tiempoPromedioPorZona(int zonaSalida, int hora)
 	{
-		return null;
+		Queue<UBERTrip> respuesta = new Queue<>();
+		Queue<UBERTrip> temp = listaViajes;
+		while(temp.hasNext())
+		{
+			UBERTrip x = (UBERTrip) listaViajes.dequeue();
+			if(x.darIdorigen() == zonaSalida && x.darTiempo() == hora)
+			{
+				respuesta.enqueue(x);
+			}
+		}
+		return respuesta;
 	}
-
-	public UBERTrip[] tiempoPromedioPorRangoHora(int zonaSalida, int horaA, int horaB)
+	public Queue tiempoPromedioPorZonallegada(int zonallegada, int hora)
 	{
-		return null;
+		Queue<UBERTrip> respuesta = new Queue<>();
+		Queue<UBERTrip> temp = listaViajes;
+		while(temp.hasNext())
+		{
+			UBERTrip x = (UBERTrip) listaViajes.dequeue();
+			if(x.darIddestino() == zonallegada && x.darTiempo() == hora)
+			{
+				respuesta.enqueue(x);
+			}
+		}
+		return respuesta;
+	}
+	public  Queue tiempoPromedioPorRangoHora(int zonallegada, int horaLo, int horaHi)
+	{
+		Queue<UBERTrip> respuesta = new Queue<>();
+
+		for(int i = horaLo;i < horaHi ;i++ )
+		{
+			Queue<UBERTrip> temp= tiempoPromedioPorZonallegada(zonallegada, i);
+			while(temp.hasNext())
+			{
+				UBERTrip z = temp.dequeue();
+				respuesta.enqueue(z);
+			}
+		}
+		
+		return respuesta;
 	}
 
 	public Integer[] zonasMasNodos(int N)

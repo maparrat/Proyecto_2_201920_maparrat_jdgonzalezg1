@@ -4,7 +4,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.data_structures.MaxHeapCP;
+import model.data_structures.Queue;
 import model.logic.MVCModelo;
+import model.logic.UBERTrip;
 import model.logic.MVCModelo.contadora;
 import view.MVCView;
 
@@ -115,29 +117,29 @@ public class Controller {
 						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(23, numeroLetras));
 
 						int i = 1;
-						
+
 						while(letras.darNumeroElementos() > 0)
 						{
 							contadora contadoraActual = letras.sacarMax();
 							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
 							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
 							System.out.println("Primeras zonas con esta letra: ");
-							
+
 							int j = 1;
-							
+
 							while(contadoraActual.darZonas().hasNext() && j <= maximoDeDatos)
 							{
 								System.out.println("Nombre de la zona #" + j + ": " + contadoraActual.darZonas().next().darScanombre());
 								j++;
 							}
 							System.out.println("---------");
-							
+
 							i++;
 						}
-												
+
 						if(numeroLetras>23)
 						{System.out.println("(Solo hay 23 letras que son iniciales de las zonas)");}
-						
+
 						System.out.println("(Se imprimen hasta 20 zonas por letra)\n---------");
 
 					}
@@ -154,17 +156,67 @@ public class Controller {
 
 			case 3:
 				//2A
-				
+
+
 				break;
-				
+
 			case 4:
 				//3A
+				int limiteBajo;
+				try
+				{
+					System.out.println("--------- \nDar limite bajo de tiempo promedio: ");
+					limiteBajo = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int limiteAlto;
+				try
+				{
+					System.out.println("--------- \nDar limite Alto de tiempo promedio: ");
+					limiteAlto = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int N;
+				try
+				{
+					System.out.println("--------- \nDar N cantidad de viajes : ");
+					N = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				Queue<UBERTrip> rango = modelo.tiemposPromedioEnRango(limiteBajo, limiteAlto);
+				int y =0;
 				
+		
+				
+				while(rango.hasNext()&& y < N)
+				{
+					UBERTrip x = rango.dequeue();
+
+					System.out.println("Dato numero"+y);
+					System.out.println("(Zona de origen:"+x.darIdorigen());
+					System.out.println("(Zona de destino:"+x.darIddestino());
+					System.out.println("(Mes:"+x.darTiempo());
+					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+
+					y++;
+				}
 				break;
-				
+
 			case 5:
 				//1B
-				
+
 				int numeroZonas;
 				try
 				{
@@ -185,31 +237,31 @@ public class Controller {
 						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(1160, numeroZonas));
 
 						int i = 1;
-						
+
 						while(letras.darNumeroElementos() > 0)
 						{
 							contadora contadoraActual = letras.sacarMax();
 							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
 							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
 							System.out.println("Primeras zonas con esta letra: ");
-							
+
 							int j = 1;
-							
+
 							while(contadoraActual.darZonas().hasNext() && j <= maximoDeDatos)
 							{
 								System.out.println("Nombre de la zona #" + j + ": " + contadoraActual.darZonas().next().darScanombre());
 								j++;
 							}
 							System.out.println("---------");
-							
+
 							i++;
-							
+
 							//
 						}
-												
+
 						if(numeroZonas>1160)
 						{System.out.println("(Solo hay 1160 zonas)");}
-						
+
 						System.out.println("(Se imprimen hasta 20 zonas por letra)\n---------");
 
 					}
@@ -224,37 +276,176 @@ public class Controller {
 				}				
 
 				break;
-				
+
 			case 6:
 				//2B
 
 				break;
-				
+
 			case 7:
 				//3B
-
-				break;
+				int limiteBajoB;
+				try
+				{
+					System.out.println("--------- \nDar limite bajo de desviacion: ");
+					limiteBajoB = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int limiteAltoB;
+				try
+				{
+					System.out.println("--------- \nDar limite Alto de desviacion: ");
+					limiteAltoB = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int NB;
+				try
+				{
+					System.out.println("--------- \nDar N cantidad de viajes : ");
+					NB = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				Queue<UBERTrip> rangoB = modelo.tiemposDeEspera(limiteAltoB, limiteBajoB);
+				int yB =0;
 				
+		
+				
+				while(rangoB.hasNext()&& yB < NB)
+				{
+					UBERTrip x = rangoB.dequeue();
+
+					System.out.println("Dato numero"+yB);
+					System.out.println("(Zona de origen:"+x.darIdorigen());
+					System.out.println("(Zona de destino:"+x.darIddestino());
+					System.out.println("(Mes:"+x.darTiempo());
+					System.out.println("(Tiempo de desviacion:"+x.darDesviacion());
+
+					yB++;
+				}
+				break;
+
 			case 8:
 				//1C
-
-				break;
+				int zonaDada;
+				try
+				{
+					System.out.println("--------- \nDar zona a buscar: ");
+					zonaDada = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int horaDada;
+				try
+				{
+					System.out.println("--------- \nDar la hora a buscar : ");
+					horaDada = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
 				
+				Queue<UBERTrip> encontrados  = modelo.tiempoPromedioPorZona(zonaDada, horaDada);
+				int p =0;
+				
+		
+				
+				while(encontrados.hasNext())
+				{
+					UBERTrip x = encontrados.dequeue();
+
+					System.out.println("Dato numero"+p);
+					System.out.println("(Zona de origen:"+x.darIdorigen());
+					System.out.println("(Zona de destino:"+x.darIddestino());
+					System.out.println("(Hora:"+x.darTiempo());
+					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+
+					p++;
+				}
+				break;
+
 			case 9:
 				//2C
+				int zonallegadaDada;
+				try
+				{
+					System.out.println("--------- \nDar zona a buscar: ");
+					zonallegadaDada = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int horalo;
+				try
+				{
+					System.out.println("--------- \nDar la horan mas baja  a buscar : ");
+					horalo = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				int horahi;
+				try
+				{
+					System.out.println("--------- \nDar la horan mas alta  a buscar : ");
+					horahi = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				
+				Queue<UBERTrip> encontradosR  = modelo.tiempoPromedioPorRangoHora(zonallegadaDada, horalo, horahi);
+				int o =0;
+				
+		
+				
+				while(encontradosR.hasNext())
+				{
+					UBERTrip x = encontradosR.dequeue();
+
+					System.out.println("Dato numero"+o);
+					System.out.println("(Zona de origen:"+x.darIdorigen());
+					System.out.println("(Zona de destino:"+x.darIddestino());
+					System.out.println("(Hora:"+x.darTiempo());
+					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+
+					o++;
+				}
 
 				break;
-				
+
 			case 10:
 				//3C
 
 				break;
-				
+
 			case 11:
 				//4C
 
 				break;
-				
+
 			case 12:
 
 				System.out.println("--------- \n Hasta pronto !! \n---------"); 
