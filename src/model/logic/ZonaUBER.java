@@ -87,8 +87,6 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 	{
 		return shape_area;
 	}
-
-
 	
 	public String darNombre()
 	{
@@ -99,6 +97,4 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 	{
 		return MOVEMENT_ID;
 	}
-	
-	
 }

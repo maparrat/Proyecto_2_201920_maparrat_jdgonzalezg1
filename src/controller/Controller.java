@@ -3,11 +3,16 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import model.data_structures.MaxHeapCP;
 import model.data_structures.Queue;
+import model.data_structures.SeparateChaining;
 import model.logic.MVCModelo;
 import model.logic.UBERTrip;
-import model.logic.MVCModelo.contadora;
+import model.logic.MVCModelo.Nodo;
+import model.logic.MVCModelo.Zona;
+import model.logic.MVCModelo.Contadora;
 import view.MVCView;
 
 public class Controller {
@@ -66,7 +71,7 @@ public class Controller {
 				}
 				catch(InputMismatchException e)
 				{
-					System.out.println("Debe ingresar un valor numérico (1 o 4)\n---------");
+					System.out.println("Debe ingresar un valor numérico (1 a 4)\n---------");
 					break;
 				}
 
@@ -92,7 +97,7 @@ public class Controller {
 				}
 				else
 				{
-					System.out.println("Ingrese un valor válido (1 o 2)\n---------");	
+					System.out.println("Ingrese un valor válido (1 a 4)\n---------");	
 				}
 				break;
 
@@ -114,13 +119,13 @@ public class Controller {
 				{
 					try
 					{
-						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(23, numeroLetras));
+						MaxHeapCP<Contadora> letras = modelo.letrasMasComunes(Math.min(23, numeroLetras));
 
 						int i = 1;
 
 						while(letras.darNumeroElementos() > 0)
 						{
-							contadora contadoraActual = letras.sacarMax();
+							Contadora contadoraActual = letras.sacarMax();
 							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
 							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
 							System.out.println("Primeras zonas con esta letra: ");
@@ -157,37 +162,56 @@ public class Controller {
 			case 3:
 				//2A
 
+				double latitud;
+				double longitud;
+				try
+				{
+					System.out.println("--------- \nDar latitud a buscar: ");
+					latitud = lector.nextDouble();
+					System.out.println("--------- \nDar longitud a buscar: ");
+					longitud = lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				int auxLat = (int)(latitud*1000);
+				int auxLong = (int)(longitud*1000);
+
+				SeparateChaining<String, Nodo> nodos = modelo.nodosQuelimitanZonas(auxLat, auxLong);
+
+				System.out.println("Número de nodos: " + nodos.size() + "\n");
+
+				int k = 1;
+				Queue llaves = (Queue) nodos.keys();
+
+				while(llaves.darNumeroElementos() > 0 && k <= maximoDeDatos)
+				{
+					Nodo actual = nodos.delete((String) llaves.dequeue());
+
+					System.out.println("Nodo #" + k + ": ");
+					System.out.println("Latitud: " + actual.darLatitud());
+					System.out.println("Longitud: " + actual.darLongitud());
+					System.out.println("Nombre de la zona: " + actual.darNombreZona() + "\n---------");
+					k++;
+				}
 
 				break;
 
 			case 4:
 				//3A
 				int limiteBajo;
-				try
-				{
-					System.out.println("--------- \nDar limite bajo de tiempo promedio: ");
-					limiteBajo = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
 				int limiteAlto;
-				try
-				{
-					System.out.println("--------- \nDar limite Alto de tiempo promedio: ");
-					limiteAlto = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
 				int N;
 				try
 				{
-					System.out.println("--------- \nDar N cantidad de viajes : ");
+					System.out.println("--------- \nDar limite inferior de tiempo promedio: ");
+					limiteBajo = lector.nextInt();
+					System.out.println("--------- \nDar limite superior de tiempo promedio: ");
+					limiteAlto = lector.nextInt();
+					System.out.println("--------- \nDar Ncantidad de viajes: ");
 					N = lector.nextInt();
 				}
 				catch(InputMismatchException e)
@@ -195,20 +219,20 @@ public class Controller {
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
+
 				Queue<UBERTrip> rango = modelo.tiemposPromedioEnRango(limiteBajo, limiteAlto);
-				int y =0;
-				
-		
-				
-				while(rango.hasNext()&& y < N)
+
+				int y = 1;
+
+				while(rango.hasNext() && y <= N)
 				{
 					UBERTrip x = rango.dequeue();
 
-					System.out.println("Dato numero"+y);
-					System.out.println("(Zona de origen:"+x.darIdorigen());
-					System.out.println("(Zona de destino:"+x.darIddestino());
-					System.out.println("(Mes:"+x.darTiempo());
-					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+					System.out.println("Dato numero: " + y);
+					System.out.println("Zona de origen: " + x.darIdorigen());
+					System.out.println("Zona de destino: " + x.darIddestino());
+					System.out.println("Mes: " + x.darTiempo());
+					System.out.println("Tiempo promedio de viaje: " + x.darMeanTravelTime() + "\n---------");
 
 					y++;
 				}
@@ -216,7 +240,6 @@ public class Controller {
 
 			case 5:
 				//1B
-
 				int numeroZonas;
 				try
 				{
@@ -233,37 +256,19 @@ public class Controller {
 				{
 					try
 					{
-						//
-						MaxHeapCP<contadora> letras = modelo.letrasMasComunes(Math.min(1160, numeroZonas));
+						MaxHeapCP<Zona> zonas = modelo.zonasMasAlNorte();
 
-						int i = 1;
+						int l = 1;
 
-						while(letras.darNumeroElementos() > 0)
+						while(!zonas.estaVacia() && l <= numeroZonas)
 						{
-							contadora contadoraActual = letras.sacarMax();
-							System.out.println("Letra #" + i + ": " + contadoraActual.darLetra());
-							System.out.println("Número de zonas con esta letra: " + contadoraActual.darZonas().darNumeroElementos());
-							System.out.println("Primeras zonas con esta letra: ");
+							Zona actual = zonas.sacarMax();
 
-							int j = 1;
-
-							while(contadoraActual.darZonas().hasNext() && j <= maximoDeDatos)
-							{
-								System.out.println("Nombre de la zona #" + j + ": " + contadoraActual.darZonas().next().darScanombre());
-								j++;
-							}
-							System.out.println("---------");
-
-							i++;
-
-							//
-						}
-
-						if(numeroZonas>1160)
-						{System.out.println("(Solo hay 1160 zonas)");}
-
-						System.out.println("(Se imprimen hasta 20 zonas por letra)\n---------");
-
+							System.out.println("Zona #" + l + ": ");
+							System.out.println("Nombre de la zona: " + actual.darNombreZona());
+							System.out.println("(Latitud, longitud) del punto mas al norte: (" + actual.darLatitudNorte() + ", " + actual.darLongitudNorte() + ")\n---------");
+							l++;
+						}						
 					}
 					catch (Exception e)
 					{
@@ -285,30 +290,15 @@ public class Controller {
 			case 7:
 				//3B
 				int limiteBajoB;
+				int limiteAltoB;
+				int NB;
+
 				try
 				{
 					System.out.println("--------- \nDar limite bajo de desviacion: ");
 					limiteBajoB = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
-				int limiteAltoB;
-				try
-				{
 					System.out.println("--------- \nDar limite Alto de desviacion: ");
 					limiteAltoB = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
-				int NB;
-				try
-				{
 					System.out.println("--------- \nDar N cantidad de viajes : ");
 					NB = lector.nextInt();
 				}
@@ -317,20 +307,19 @@ public class Controller {
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
+
 				Queue<UBERTrip> rangoB = modelo.tiemposDeEspera(limiteAltoB, limiteBajoB);
-				int yB =0;
-				
-		
-				
-				while(rangoB.hasNext()&& yB < NB)
+				int yB = 1;
+
+				while(rangoB.hasNext() && yB <= NB)
 				{
 					UBERTrip x = rangoB.dequeue();
 
-					System.out.println("Dato numero"+yB);
-					System.out.println("(Zona de origen:"+x.darIdorigen());
-					System.out.println("(Zona de destino:"+x.darIddestino());
-					System.out.println("(Mes:"+x.darTiempo());
-					System.out.println("(Tiempo de desviacion:"+x.darDesviacion());
+					System.out.println("Dato numero " + yB);
+					System.out.println("(Zona de origen: " + x.darIdorigen());
+					System.out.println("(Zona de destino: " + x.darIddestino());
+					System.out.println("(Mes: " + x.darTiempo());
+					System.out.println("(Tiempo de desviacion: " + x.darDesviacion());
 
 					yB++;
 				}
@@ -339,19 +328,11 @@ public class Controller {
 			case 8:
 				//1C
 				int zonaDada;
+				int horaDada;
 				try
 				{
 					System.out.println("--------- \nDar zona a buscar: ");
 					zonaDada = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
-				int horaDada;
-				try
-				{
 					System.out.println("--------- \nDar la hora a buscar : ");
 					horaDada = lector.nextInt();
 				}
@@ -360,21 +341,19 @@ public class Controller {
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
-				
+
 				Queue<UBERTrip> encontrados  = modelo.tiempoPromedioPorZona(zonaDada, horaDada);
-				int p =0;
-				
-		
-				
+				int p = 1;
+
 				while(encontrados.hasNext())
 				{
 					UBERTrip x = encontrados.dequeue();
 
-					System.out.println("Dato numero"+p);
-					System.out.println("(Zona de origen:"+x.darIdorigen());
-					System.out.println("(Zona de destino:"+x.darIddestino());
-					System.out.println("(Hora:"+x.darTiempo());
-					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+					System.out.println("Dato numero " + p);
+					System.out.println("(Zona de origen: " + x.darIdorigen());
+					System.out.println("(Zona de destino: " + x.darIddestino());
+					System.out.println("(Hora: " + x.darTiempo());
+					System.out.println("(Tiempo promedio de viaje: " + x.darMeanTravelTime());
 
 					p++;
 				}
@@ -383,30 +362,15 @@ public class Controller {
 			case 9:
 				//2C
 				int zonallegadaDada;
+				int horalo;
+				int horahi;
+
 				try
 				{
 					System.out.println("--------- \nDar zona a buscar: ");
 					zonallegadaDada = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
-				int horalo;
-				try
-				{
 					System.out.println("--------- \nDar la horan mas baja  a buscar : ");
 					horalo = lector.nextInt();
-				}
-				catch(InputMismatchException e)
-				{
-					System.out.println("Debe ingresar un valor numérico\n---------");
-					break;
-				}
-				int horahi;
-				try
-				{
 					System.out.println("--------- \nDar la horan mas alta  a buscar : ");
 					horahi = lector.nextInt();
 				}
@@ -415,21 +379,19 @@ public class Controller {
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
-				
+
 				Queue<UBERTrip> encontradosR  = modelo.tiempoPromedioPorRangoHora(zonallegadaDada, horalo, horahi);
-				int o =0;
-				
-		
-				
+				int o = 1;		
+
 				while(encontradosR.hasNext())
 				{
 					UBERTrip x = encontradosR.dequeue();
 
-					System.out.println("Dato numero"+o);
-					System.out.println("(Zona de origen:"+x.darIdorigen());
-					System.out.println("(Zona de destino:"+x.darIddestino());
-					System.out.println("(Hora:"+x.darTiempo());
-					System.out.println("(Tiempo promedio de viaje:"+x.darMeanTravelTime());
+					System.out.println("Dato numero " + o);
+					System.out.println("(Zona de origen: " + x.darIdorigen());
+					System.out.println("(Zona de destino:" + x.darIddestino());
+					System.out.println("(Hora: " + x.darTiempo());
+					System.out.println("(Tiempo promedio de viaje: " + x.darMeanTravelTime());
 
 					o++;
 				}
