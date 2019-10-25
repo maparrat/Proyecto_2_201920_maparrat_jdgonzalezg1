@@ -120,7 +120,7 @@ public class MVCModelo{
 	public void cargarArchivoZonas()
 	{
 		zonas = new MaxHeapCP<>(1);
-		
+
 		JSONParser jsonParser = new JSONParser();
 
 		try (FileReader reader = new FileReader("data/bogota_cadastral.json"))
@@ -491,8 +491,24 @@ public class MVCModelo{
 		return zonas;
 	}
 
-	public Integer[] tablaASCIIdatosFaltantes()
-	{		
-		return null;
+	public boolean[][][] tablaASCIIdatosFaltantes()
+	{
+		boolean[][][] tabla = new boolean[1160][1160][24];
+		
+		Queue<Integer> llaves;
+		try
+		{
+			llaves = (Queue<Integer>) viajesHourly.keys();
+			
+			while(llaves.darNumeroElementos() > 0)
+			{
+				UBERTrip actual = viajesHourly.get(llaves.dequeue());
+				
+				tabla[actual.darIdorigen()][actual.darIddestino()][actual.darTiempo()] = true;
+			}	
+		}
+		catch (Exception e) {e.printStackTrace();}
+
+		return tabla;
 	}
 }

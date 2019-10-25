@@ -481,6 +481,24 @@ public class Controller {
 			case 11:
 				//4C
 
+				boolean[][][] tabla = modelo.tablaASCIIdatosFaltantes();
+
+				for (int a = 0; a < 1160; a++)
+				{
+					String actual = (a+1) + "| ";
+					for (int b = 0; b < 1160; b++)
+					{
+						for (int c = 0; c < 24; c++) 
+						{
+							if(!tabla[a][b][c])
+							{
+								actual += "*";
+							}
+						}	
+					}
+					System.out.println(actual);	
+				}
+
 				break;
 
 			case 12:

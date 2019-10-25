@@ -16,7 +16,6 @@ public class UBERTrip implements Comparable<UBERTrip>
 		hod = pHod;
 		mtt = pMtt;
 		sdtt = pSdtt;
-	
 	}
 	
 	/**
