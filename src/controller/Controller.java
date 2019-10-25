@@ -485,17 +485,24 @@ public class Controller {
 
 				for (int a = 0; a < 1160; a++)
 				{
-					String actual = (a+1) + "| ";
+					int i = 0;
 					for (int b = 0; b < 1160; b++)
 					{
 						for (int c = 0; c < 24; c++) 
 						{
 							if(!tabla[a][b][c])
 							{
-								actual += "*";
+							  i++;
 							}
 						}	
 					}
+					String actual = (a+1) + "| ";
+					int numAsteriscos = (50*i)/(1160*24);
+					for (int j = 0; j < numAsteriscos; j++)
+					{
+						actual += "*";
+					}
+					
 					System.out.println(actual);	
 				}
 
