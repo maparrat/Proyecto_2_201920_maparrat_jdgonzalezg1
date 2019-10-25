@@ -9,7 +9,9 @@ import model.data_structures.MaxHeapCP;
 import model.data_structures.Queue;
 import model.data_structures.SeparateChaining;
 import model.logic.MVCModelo;
+import model.logic.NodoMallaVial;
 import model.logic.UBERTrip;
+import model.logic.ZonaUBER;
 import model.logic.MVCModelo.Nodo;
 import model.logic.MVCModelo.Zona;
 import model.logic.MVCModelo.Contadora;
@@ -157,6 +159,7 @@ public class Controller {
 				{
 					System.out.println("Ingrese un valor válido (1 a 27)\n---------");	
 				}
+				modelo.cargarArchivoZonas();
 				break;
 
 			case 3:
@@ -198,6 +201,8 @@ public class Controller {
 					k++;
 				}
 
+				System.out.println("(Se imprimen hasta 20 nodos)\n---------");
+				modelo.cargarArchivoZonas();
 				break;
 
 			case 4:
@@ -211,7 +216,7 @@ public class Controller {
 					limiteBajo = lector.nextInt();
 					System.out.println("--------- \nDar limite superior de tiempo promedio: ");
 					limiteAlto = lector.nextInt();
-					System.out.println("--------- \nDar Ncantidad de viajes: ");
+					System.out.println("--------- \nDar cantidad de viajes: ");
 					N = lector.nextInt();
 				}
 				catch(InputMismatchException e)
@@ -228,7 +233,7 @@ public class Controller {
 				{
 					UBERTrip x = rango.dequeue();
 
-					System.out.println("Dato numero: " + y);
+					System.out.println("Dato #" + y + ": ");
 					System.out.println("Zona de origen: " + x.darIdorigen());
 					System.out.println("Zona de destino: " + x.darIddestino());
 					System.out.println("Mes: " + x.darTiempo());
@@ -279,11 +284,49 @@ public class Controller {
 				{
 					System.out.println("Ingrese un valor válido\n---------");	
 				}				
-
+				modelo.cargarArchivoZonas();
 				break;
 
 			case 6:
 				//2B
+
+				double latitud2B;
+				double longitud2B;
+				try
+				{
+					System.out.println("--------- \nDar latitud a buscar: ");
+					latitud2B = lector.nextDouble();
+					System.out.println("--------- \nDar longitud a buscar: ");
+					longitud2B = lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				int auxLat2B = (int)(latitud2B*1000);
+				int auxLong2B = (int)(longitud2B*1000);
+
+				SeparateChaining<Double, NodoMallaVial> nodos2B = modelo.nodosPorLocalizacion(auxLat2B, auxLong2B);
+
+				System.out.println("Número de nodos: " + nodos2B.size() + "\n");
+
+				int n = 1;
+				Queue llaves2B = (Queue) nodos2B.keys();
+
+				while(llaves2B.darNumeroElementos() > 0 && n <= maximoDeDatos)
+				{
+					NodoMallaVial actual = nodos2B.delete((Double) llaves2B.dequeue());
+
+					System.out.println("Nodo #" + n + ": ");
+					System.out.println("Id de la zona: " + actual.darDatosViaje()[0]);
+					System.out.println("Latitud: " + actual.darDatosViaje()[2]);
+					System.out.println("Longitud: " + actual.darDatosViaje()[1] + "\n---------");
+					n++;
+				}
+
+				System.out.println("(Se imprimen hasta 20 nodos)\n---------");
 
 				break;
 
@@ -315,11 +358,11 @@ public class Controller {
 				{
 					UBERTrip x = rangoB.dequeue();
 
-					System.out.println("Dato numero " + yB);
-					System.out.println("(Zona de origen: " + x.darIdorigen());
-					System.out.println("(Zona de destino: " + x.darIddestino());
-					System.out.println("(Mes: " + x.darTiempo());
-					System.out.println("(Tiempo de desviacion: " + x.darDesviacion());
+					System.out.println("Dato #" + yB + ": ");
+					System.out.println("Zona de origen: " + x.darIdorigen());
+					System.out.println("Zona de destino: " + x.darIddestino());
+					System.out.println("Mes: " + x.darTiempo());
+					System.out.println("Tiempo de desviacion: " + x.darDesviacion() + "\n---------");
 
 					yB++;
 				}
@@ -349,11 +392,11 @@ public class Controller {
 				{
 					UBERTrip x = encontrados.dequeue();
 
-					System.out.println("Dato numero " + p);
-					System.out.println("(Zona de origen: " + x.darIdorigen());
-					System.out.println("(Zona de destino: " + x.darIddestino());
-					System.out.println("(Hora: " + x.darTiempo());
-					System.out.println("(Tiempo promedio de viaje: " + x.darMeanTravelTime());
+					System.out.println("Dato #" + p + ": ");
+					System.out.println("Zona de origen: " + x.darIdorigen());
+					System.out.println("Zona de destino: " + x.darIddestino());
+					System.out.println("Hora: " + x.darTiempo());
+					System.out.println("Tiempo promedio de viaje: " + x.darMeanTravelTime() + "\n---------");
 
 					p++;
 				}
@@ -369,9 +412,9 @@ public class Controller {
 				{
 					System.out.println("--------- \nDar zona a buscar: ");
 					zonallegadaDada = lector.nextInt();
-					System.out.println("--------- \nDar la horan mas baja  a buscar : ");
+					System.out.println("--------- \nDar la hora mas baja a buscar: ");
 					horalo = lector.nextInt();
-					System.out.println("--------- \nDar la horan mas alta  a buscar : ");
+					System.out.println("--------- \nDar la hora mas alta a buscar: ");
 					horahi = lector.nextInt();
 				}
 				catch(InputMismatchException e)
@@ -387,11 +430,11 @@ public class Controller {
 				{
 					UBERTrip x = encontradosR.dequeue();
 
-					System.out.println("Dato numero " + o);
-					System.out.println("(Zona de origen: " + x.darIdorigen());
-					System.out.println("(Zona de destino:" + x.darIddestino());
-					System.out.println("(Hora: " + x.darTiempo());
-					System.out.println("(Tiempo promedio de viaje: " + x.darMeanTravelTime());
+					System.out.println("Dato #" + o + ": ");
+					System.out.println("Zona de origen: " + x.darIdorigen());
+					System.out.println("Zona de destino:" + x.darIddestino());
+					System.out.println("Hora: " + x.darTiempo());
+					System.out.println("Tiempo promedio de viaje: " + x.darMeanTravelTime() + "\n---------");
 
 					o++;
 				}
@@ -399,7 +442,39 @@ public class Controller {
 				break;
 
 			case 10:
-				//3C
+				//3C				
+				int cantidadZonas;
+				try
+				{
+					System.out.println("--------- \nDar cantidad de zonas a buscar: ");
+					cantidadZonas = lector.nextInt();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				if(cantidadZonas >= 1)
+				{
+					MaxHeapCP<ZonaUBER> zonas = modelo.zonasMasNodos();
+
+					int m = 1;
+
+					while(!zonas.estaVacia() && m <= cantidadZonas)
+					{
+						ZonaUBER actual = zonas.sacarMax();
+
+						System.out.println("Zona #" + m + ": ");
+						System.out.println("Nombre de la zona: " + actual.darScanombre());
+						System.out.println("Número de nodos en la frontera: " + actual.darCoordinates().darNumeroElementos() + "\n---------");
+						m++;
+					}						
+				}
+				else
+				{
+					System.out.println("Ingrese un valor válido\n---------");	
+				}				
 
 				break;
 

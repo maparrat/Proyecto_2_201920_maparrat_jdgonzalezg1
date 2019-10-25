@@ -27,7 +27,7 @@ public class MVCModelo{
 	private MaxHeapCP<ZonaUBER> zonas;
 
 	private SeparateChaining nodos;
-    private Queue listaViajes;
+	private Queue listaViajes;
 	private RedBlackBST<Integer, UBERTrip> viajesMonthly, viajesWeekly, viajesHourly, viajesMonthyDesviacion;
 
 	/**
@@ -90,7 +90,7 @@ public class MVCModelo{
 		for (int i = 0; i < 100000; i++)
 		{
 			String[] line = reader.readNext();
-			
+
 			if(!primeraLectura)
 			{
 				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
@@ -119,6 +119,8 @@ public class MVCModelo{
 
 	public void cargarArchivoZonas()
 	{
+		zonas = new MaxHeapCP<>(1);
+		
 		JSONParser jsonParser = new JSONParser();
 
 		try (FileReader reader = new FileReader("data/bogota_cadastral.json"))
@@ -227,19 +229,19 @@ public class MVCModelo{
 		private double latitud;
 		private double longitud;
 		private String nombreZona;
-		
+
 		public Nodo(double pLatitud, double pLongitud, String pNombreZona)
 		{
 			latitud = pLatitud;
 			longitud = pLongitud;
 			nombreZona = pNombreZona;
 		}
-		
+
 		public double darLatitud()
 		{
 			return latitud;
 		}
-		
+
 		public double darLongitud()
 		{
 			return longitud;
@@ -250,25 +252,25 @@ public class MVCModelo{
 			return nombreZona;
 		}
 	}
-	
+
 	public class Zona implements Comparable<Zona>
 	{
 		private double latitudNorte;
 		private double longitudNorte;
 		private String nombreZona;
-		
+
 		public Zona(double pLatitudNorte, double pLongitudNorte, String pNombreZona)
 		{
 			latitudNorte = pLatitudNorte;
 			longitudNorte = pLongitudNorte;
 			nombreZona = pNombreZona;
 		}
-		
+
 		public double darLatitudNorte()
 		{
 			return latitudNorte;
 		}
-		
+
 		public double darLongitudNorte()
 		{
 			return longitudNorte;
@@ -292,20 +294,19 @@ public class MVCModelo{
 			return 0;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------
 	//Parte A
 	//---------------------------------------------------------------------
 
 	public MaxHeapCP<Contadora> letrasMasComunes(int N)
 	{
-		MaxHeapCP<ZonaUBER> zonasCopia = zonas;
 		int contador = 0;
 		Contadora[] buscador = new Contadora[27];
 
-		while(zonasCopia.darNumeroElementos() > 0)
+		while(zonas.darNumeroElementos() > 0)
 		{
-			ZonaUBER zonaActual = zonasCopia.sacarMax();
+			ZonaUBER zonaActual = zonas.sacarMax();
 			String pletra = "" + zonaActual.darScanombre().charAt(0);
 
 			boolean existe = false;
@@ -337,23 +338,21 @@ public class MVCModelo{
 	public SeparateChaining<String, Nodo> nodosQuelimitanZonas(int pLatitud, int pLongitud)
 	{
 		SeparateChaining<String, Nodo> respuesta = new SeparateChaining<>(1);
-		
-		MaxHeapCP<ZonaUBER> copia = zonas;
-		
-		while(!copia.estaVacia())
+
+		while(!zonas.estaVacia())
 		{
-			ZonaUBER actual = copia.sacarMax();
-			
+			ZonaUBER actual = zonas.sacarMax();
+
 			while(actual.darCoordinates().darNumeroElementos() > 0)
 			{
 				double[] coordenadaActual = (double[]) actual.darCoordinates().dequeue();
-				
+
 				double latitud = coordenadaActual[1];
 				double longitud = coordenadaActual[0];
-				
+
 				int auxLat = (int)(latitud*1000);
 				int auxLong = (int)(longitud*1000);
-				
+
 				if(auxLat == pLatitud && auxLong == pLongitud)
 				{
 					Nodo x = new Nodo(latitud, longitud, actual.darScanombre());
@@ -361,7 +360,7 @@ public class MVCModelo{
 				}				
 			}
 		}
-		
+
 		return respuesta;
 	}
 
@@ -378,23 +377,21 @@ public class MVCModelo{
 	public MaxHeapCP<Zona> zonasMasAlNorte()
 	{
 		MaxHeapCP<Zona> respuesta = new MaxHeapCP<Zona>(1);
-		
-		MaxHeapCP<ZonaUBER> copia = zonas;
-		
-		while(!copia.estaVacia())
+
+		while(!zonas.estaVacia())
 		{
-			ZonaUBER actual = copia.sacarMax();
-			
+			ZonaUBER actual = zonas.sacarMax();
+
 			double latitudMaxima = -100.0;
 			double longitudMaxima = -200.0;
-			
+
 			while(actual.darCoordinates().darNumeroElementos() > 0)
 			{
 				double[] coordenadaActual = (double[]) actual.darCoordinates().dequeue();
-				
+
 				double latitud = coordenadaActual[1];
 				double longitud = coordenadaActual[0];
-				
+
 				if(latitud > latitudMaxima)
 				{
 					latitudMaxima = latitud;
@@ -403,13 +400,33 @@ public class MVCModelo{
 			}
 			respuesta.agregar(new Zona(latitudMaxima, longitudMaxima, actual.darScanombre()));			
 		}
-		
+
 		return respuesta;
 	}
 
-	public double[] nodosPorLocalizacion(double latitud, double longitud)
+	public SeparateChaining<Double, NodoMallaVial> nodosPorLocalizacion(int pLatitud, int pLongitud)
 	{
-		return null;
+		SeparateChaining<Double, NodoMallaVial> respuesta = new SeparateChaining<>(1);
+
+		Queue llaves = (Queue) nodos.keys();
+
+		while(llaves.darNumeroElementos() > 0)
+		{
+			NodoMallaVial actual = (NodoMallaVial) nodos.get(llaves.dequeue());
+
+			double latitud = actual.darDatosViaje()[2];
+			double longitud = actual.darDatosViaje()[1];
+
+			int auxLat = (int)(latitud*1000);
+			int auxLong = (int)(longitud*1000);
+
+			if(auxLat == pLatitud && auxLong == pLongitud)
+			{
+				respuesta.put(actual.darDatosViaje()[0], actual);
+			}
+		}
+
+		return respuesta;
 	}
 
 	public Queue<UBERTrip> tiemposDeEspera(int limiteAlto,  int limiteBajo)
@@ -436,7 +453,7 @@ public class MVCModelo{
 		}
 		return respuesta;
 	}
-	
+
 	public Queue tiempoPromedioPorZonallegada(int zonallegada, int hora)
 	{
 		Queue<UBERTrip> respuesta = new Queue<>();
@@ -451,7 +468,7 @@ public class MVCModelo{
 		}
 		return respuesta;
 	}
-	
+
 	public Queue tiempoPromedioPorRangoHora(int zonallegada, int horaLo, int horaHi)
 	{
 		Queue<UBERTrip> respuesta = new Queue<>();
@@ -465,13 +482,13 @@ public class MVCModelo{
 				respuesta.enqueue(z);
 			}
 		}
-		
+
 		return respuesta;
 	}
 
-	public Integer[] zonasMasNodos(int N)
+	public MaxHeapCP<ZonaUBER> zonasMasNodos()
 	{
-		return null;
+		return zonas;
 	}
 
 	public Integer[] tablaASCIIdatosFaltantes()

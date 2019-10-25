@@ -15,10 +15,10 @@ public class MVCView
 	{
 		System.out.println("1. Cargar archivo");
 		System.out.println("2. Buscar las letras más frecuentes por las que comienza el nombre de una zona");
-		System.out.println("3. Buscar los nodos que delimitan las zonas por Localización Geográfica");
+		System.out.println("3. Buscar los nodos que delimitan las zonas por localización geográfica");
 		System.out.println("4. Buscar los tiempos promedio de viaje que están en un rango en el primer trimestre");
 		System.out.println("5. Buscar las zonas que están más al norte");
-		System.out.println("6. Buscar nodos de la malla vial por Localización Geográfica");
+		System.out.println("6. Buscar nodos de la malla vial por localización geográfica");
 		System.out.println("7. Buscar los tiempos de espera que tienen una desviación estándar en un rango dado en el primer trimestre");
 		System.out.println("8. Buscar los tiempos de viaje promedio que salen de una zona dada y a una hora dada");
 		System.out.println("9. Buscar los tiempos de viaje que llegan de una zona dada y en un rango de horas");
