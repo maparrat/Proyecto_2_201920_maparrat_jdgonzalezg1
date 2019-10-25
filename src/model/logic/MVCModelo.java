@@ -492,7 +492,7 @@ public class MVCModelo{
 	}
 
 	public Integer[] tablaASCIIdatosFaltantes()
-	{
+	{		
 		return null;
 	}
 }
