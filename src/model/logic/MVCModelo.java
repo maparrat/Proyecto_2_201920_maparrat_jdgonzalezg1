@@ -95,7 +95,8 @@ public class MVCModelo{
 			{
 				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
 				Integer key = (int)(Double.parseDouble(line[2]));
-
+				//Integer key = (int)(Double.parseDouble(line[3])*Double.parseDouble(line[4]));
+				
 				viajesHourly.put(key, nuevo);
 				listaViajes.enqueue(nuevo);
 			}
@@ -574,7 +575,7 @@ public class MVCModelo{
 			{
 				UBERTrip actual = viajesHourly.get(llaves.dequeue());
 
-				tabla[actual.darIdorigen()][actual.darIddestino()][actual.darTiempo()] = true;
+				tabla[actual.darIdorigen()-1][actual.darIddestino()-1][actual.darTiempo()] = true;
 			}	
 		}
 		catch (Exception e) {e.printStackTrace();}
