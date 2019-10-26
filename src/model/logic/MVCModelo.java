@@ -96,7 +96,7 @@ public class MVCModelo{
 				UBERTrip nuevo = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4])); 
 				Integer key = (int)(Double.parseDouble(line[2]));
 				//Integer key = (int)(Double.parseDouble(line[3])*Double.parseDouble(line[4]));
-				
+
 				viajesHourly.put(key, nuevo);
 				listaViajes.enqueue(nuevo);
 			}
@@ -368,40 +368,7 @@ public class MVCModelo{
 	public Queue<UBERTrip> tiemposPromedioEnRango(int limiteBajo,int limiteAlto)
 	{
 		Queue<UBERTrip> respuesta = (Queue<UBERTrip>) viajesMonthly.valuesInRange(limiteBajo,limiteAlto);
-		Queue<UBERTrip> x =respuesta;
-		int contador =  0;
- 		while(x.hasNext())
-		{
-			x.next();
-			contador++;
-		}
- 		UBERTrip[] y = new UBERTrip[contador];
- 		for(int i = 0; i< contador ; i++)
- 		{
- 			y[i]= respuesta.dequeue();
- 		}
- 		//selection sort
- 		int n = y.length; 
- 		  
-        // One by one move boundary of unsorted subarray 
-        for (int i = 0; i < n-1; i++) 
-        { 
-            // Find the minimum element in unsorted array 
-            int min_idx = i; 
-            for (int j = i+1; j < n; j++) 
-                if (y[j].darIdorigen() < y[min_idx].darIdorigen()) 
-                    min_idx = j; 
-  
-            // Swap the found minimum element with the first 
-            // element 
-            UBERTrip temp = y[min_idx]; 
-            y[min_idx] = y[i]; 
-            y[i] = temp; 
-        } 
-        for(int i = 0; i< y.length; i++)
-        {
-        	respuesta.enqueue(y[i]);
-        }
+		
 		return respuesta;
 	}
 
@@ -467,45 +434,12 @@ public class MVCModelo{
 	public Queue<UBERTrip> tiemposDeEspera(int limiteAlto,  int limiteBajo)
 	{
 		Queue<UBERTrip> respuesta = (Queue<UBERTrip>) viajesMonthyDesviacion.valuesInRange(limiteBajo,limiteAlto);
-		Queue<UBERTrip> x =respuesta;
-		int contador =  0;
- 		while(x.hasNext())
-		{
-			x.next();
-			contador++;
-		}
- 		UBERTrip[] y = new UBERTrip[contador];
- 		for(int i = 0; i< contador ; i++)
- 		{
- 			y[i]= respuesta.dequeue();
- 		}
- 		//selection sort
- 		int n = y.length; 
- 		  
-        // One by one move boundary of unsorted subarray 
-        for (int i = 0; i < n-1; i++) 
-        { 
-            // Find the minimum element in unsorted array 
-            int min_idx = i; 
-            for (int j = i+1; j < n; j++) 
-                if (y[j].darIddestino() < y[min_idx].darIddestino()) 
-                    min_idx = j; 
-  
-            // Swap the found minimum element with the first 
-            // element 
-            UBERTrip temp = y[min_idx]; 
-            y[min_idx] = y[i]; 
-            y[i] = temp; 
-        } 
-        for(int i = 0; i< y.length; i++)
-        {
-        	respuesta.enqueue(y[i]);
-        }
-		return respuesta;
 		
+		return respuesta;
+
 	}
 
-	
+
 	//---------------------------------------------------------------------
 	//Parte C
 	//---------------------------------------------------------------------
